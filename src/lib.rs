@@ -28,9 +28,8 @@ pub fn rwa(
 ) -> f64 {
     let n = Normal::new(0.0, 1.0).unwrap();
 
-    let corr_cl_cs = (0.12 * (1.0 - E.powf(pd * -50.0)) / 
-        (1.0 - E.powf(-50.0)) + 
-        0.24 * (1.0 - (1.0 - E.powf(-50.0 * pd)) / (1.0 - E.powf(-50.0))));
+    let corr_cl_cs = (0.12 * (1.0 - E.powf(pd * -50.0)) / (1.0 - E.powf(-50.0))
+        + 0.24 * (1.0 - (1.0 - E.powf(-50.0 * pd)) / (1.0 - E.powf(-50.0))));
 
     let corr_re = (0.03 * (1.0 - E.powf(-35.0) * pd)) / (1.0 - E.powf(-35.0))
         + 0.16 * (1.0 - (1.0 - E.powf(-35.0) * pd)) / (1.0 - E.powf(-35.0));
@@ -69,20 +68,11 @@ pub fn rwa(
             _ => {}
         }
 
-        println!("inverse: {}", n.inverse_cdf(pd));
-        
-        // double tmp = Math.pow(1 - k2, -0.5) * 
-        //     d.inverseCumulativeProbability(pd) + 
-        //     Math.pow(k2 / (1.0 - k2), 0.5) * d.inverseCumulativeProbability((0.999));
-
-
         let tmp = f64::powf(1.0 - k2, -0.5) * n.inverse_cdf(pd)
             + f64::sqrt(k2 / (1.0 - k2)) * n.inverse_cdf(0.999);
-        println!("{}", tmp);
-        
+
         let rw1 = lgd * n.cdf(tmp) - pd * lgd;
-        println!("{}", rw1);
-        
+
         let b = f64::powf(0.11852 - 0.05475 * f64::log(pd, E), 2.0);
 
         if brw.eq("CS") || brw.eq("CL") || brw.eq("XX") {
